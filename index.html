@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>ElectroTrack Test</title>
+</head>
+<body>
+
+<h2>ElectroTrack – Google Sheets Test</h2>
+
+<input id="item" placeholder="Item name">
+<button onclick="addItem()">Add</button>
+
+<pre id="output"></pre>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzYUagER3zE7d4QdECeSgtkrg7WQpkEnfi4Kik3wsNlxmXwf3DC0UC54TKj7JaTXJstOA/execERE";
+
+let data = {
+  stock: []
+};
+
+async function loadData() {
+  const res = await fetch(API_URL);
+  data = await res.json();
+  render();
+}
+
+function saveData() {
+  fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+}
+
+function addItem() {
+  const name = document.getElementById("item").value;
+  data.stock.push({ name, qty: 1 });
+  saveData();
+  render();
+}
+
+function render() {
+  document.getElementById("output").textContent =
+    JSON.stringify(data, null, 2);
+}
+
+loadData();
+</script>
+
+</body>
+</html>
